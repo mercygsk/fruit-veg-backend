@@ -6,7 +6,7 @@ class New extends React.Component {
             <div>
                 <h1>New Vegtables Page</h1>
                 {/* NOTE: action will be the route, method will be the HTTP verb */}
-                <form action='/Vegtables' method="POST">
+                <form action='/vegtables' method="POST">
                     Name: <input type="text" name="name" /><br />
                     Color: < input type="text" name="color"/> <br />
                     Is Ready to Eat: <input type="checkbox" name="readyToEat"/> <br />

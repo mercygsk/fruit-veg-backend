@@ -1,4 +1,4 @@
-const Vegtables = [
+const vegtables = [
     {
         name:'Potatoes',
         color: 'brown',
@@ -16,4 +16,4 @@ const Vegtables = [
     }
 ];
 
-module.exports = Vegtables;
+module.exports = vegtables;

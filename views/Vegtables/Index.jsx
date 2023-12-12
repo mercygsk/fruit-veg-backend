@@ -2,24 +2,24 @@ const React = require('react');
 
 class Index extends React.Component {
     render() {
-        const { Vegtables } = this.props;
+        const { vegtables } = this.props;
 
         return (
             <div>
                 <h1>Vegtables Index Page</h1>
                 <nav>
-                    <a href="/Vegtables/new">Create a New Vegatable</a>
+                    <a href="/vegtables/new">Create a New Vegtable</a>
                 </nav>
                 <ul>
-                    {Vegtables.map((Vegtable, i) => {
+                    {vegtables.map((vegtable, i) => {
                         return (
                             <li>
                                 The {' '}
-                                <a href={`/Vegtables/${i}`}>
-                                    {Vegtable.name}
+                                <a href={`/vegtables/${vegtable._id}`}>
+                                    {vegtable.name}
                                 </a> {' '}
-                                is {Vegtable.color} <br></br>
-                                {Vegtable.readyToEat
+                                is {vegtable.color} <br></br>
+                                {vegtable.readyToEat
                                 ? `It is ready to eat`
                             :   `It is NOT ready to eat`}
                             <br />
