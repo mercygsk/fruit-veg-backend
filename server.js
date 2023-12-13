@@ -4,6 +4,10 @@ require('dotenv').config();
 const express = require('express');
 // require mongoose so that I can connect to my db
 const mongoose = require('mongoose');
+
+//include the method-override package place this where you instructor places it
+const methodOverride = require('method-override');
+
 const app = express();
 // we want to import the fruit model
 const Fruit = require('./models/fruit');
@@ -39,6 +43,12 @@ app.use((req, res, next) => {
 
 //near the top, around other app.use() calls
 app.use(express.urlencoded({extended:false}));
+
+//...
+//after app has been defined
+//use methodOverride.  We'll be adding a query parameter to our delete form named _method
+app.use(methodOverride('_method'));
+
 
 // These are my routes
 // We are going to create the 7 RESTful routes
@@ -92,6 +102,76 @@ app.get('/vegtables/new', (req, res) => {
     res.render('vegtables/New');
 });
 
+// D - DELETE - PERMANENTLY removes fruit from the database
+app.delete('/fruits/:id', async (req, res) => {
+    // res.send('deleting...');
+    try {
+        const deletedFruit = await Fruit.findByIdAndDelete(req.params.id);
+        console.log(deletedFruit);
+        res.status(200).redirect('/fruits');
+    } catch (err) {
+        res.status(400).send(err);
+    }
+})
+
+
+// D - DELETE - PERMANENTLY removes fruit from the database
+app.delete('/vegtables/:id', async (req, res) => {
+    // res.send('deleting...');
+    try {
+        const deletedVegtable = await Vegtable.findByIdAndDelete(req.params.id);
+        console.log(deletedVegtable);
+        res.status(200).redirect('/vegtables');
+    } catch (err) {
+        res.status(400).send(err);
+    }
+})
+
+
+// U - UPDATE - makes the actual changes to the database based on the EDIT form
+app.put('/fruits/:id', async (req, res) => {
+    if (req.body.readyToEat === 'on') {
+        req.body.readyToEat = true;
+    } else {
+        req.body.readyToEat = false;
+    }
+
+    try {
+        const updatedFruit = await Fruit.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+        );
+        console.log(updatedFruit);
+        res.status(200).redirect(`/fruits/${req.params.id}`);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+ })
+
+ 
+// U - UPDATE - makes the actual changes to the database based on the EDIT form
+app.put('/vegtables/:id', async (req, res) => {
+    if (req.body.readyToEat === 'on') {
+        req.body.readyToEat = true;
+    } else {
+        req.body.readyToEat = false;
+    }
+
+    try {
+        const updatedVegtable = await Vegtable.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+        );
+        console.log(updatedVegtable);
+        res.status(200).redirect(`/vegtables/${req.params.id}`);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+ })
+
+
 // C - CREATE - update our data store
 app.post('/fruits', async (req, res) => {
     if(req.body.readyToEat === 'on') { //if checked, req.body.readyToEat is set to 'on'
@@ -122,6 +202,36 @@ app.post('/vegtables', async(req, res) => {
         res.status(400).send(err);
     }
 })
+
+
+//E-EDIT -allow the user to provide the inputs to change the fruit
+
+app.get('/fruits/:id/edit', async (req, res) => {
+    // res.send(fruits[req.params.indexOfFruitsArray]);
+    try {
+        const foundFruit = await Fruit.findById(req.params.id);
+        res.status(200).render('fruits/Edit', {fruit: foundFruit});
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
+
+
+//E-EDIT -allow the user to provide the inputs to change the fruit
+
+app.get('/vegtables/:id/edit', async (req, res) => {
+    // res.send(vegtables[req.params.indexOfFruitsArray]);
+    try {
+        const foundVegtable = await Vegtable.findById(req.params.id);
+        res.status(200).render('vegtables/Edit', {vegtable: foundVegtable});
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
+ 
+ 
 
 // S - SHOW - show route displays details of an individual fruit
 app.get('/fruits/:id', async (req, res) => {
